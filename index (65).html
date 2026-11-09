@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Linha Thaísa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Caveat:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --noite:#0f0b0a; --noite2:#1a1311; --papel:#f6efe2; --tinta:#2b1d17; --suave:#9a8574;
+    --vinho:#8d1f30; --vinho2:#b3293f; --ouro:#e2b25c; --ambar:#ffc561; --linhaMapa:#8d1f30;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:var(--noite);color:var(--papel);font-family:Inter,system-ui,sans-serif;overflow:hidden}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .tela{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;transition:opacity .7s ease}
+  .tela.on{opacity:1;pointer-events:auto}
+  .btn{background:var(--vinho);color:#fff;border:0;border-radius:999px;padding:14px 30px;font-weight:600;font-size:15px;letter-spacing:.04em;
+    box-shadow:0 8px 26px rgba(141,31,48,.5)}
+  .btn:active{transform:scale(.97)}
+  .btn.fantasma{background:transparent;border:1px solid rgba(255,255,255,.28);box-shadow:none;font-size:13px;padding:9px 16px}
+
+  /* ================= ENTRADA ================= */
+  #entrada{z-index:30;text-align:center;padding:24px;background:radial-gradient(circle at 50% 45%,rgba(0,0,0,0) 0,rgba(0,0,0,.35) 80%)}
+  .logo{width:84px;height:84px;border-radius:50%;background:var(--vinho);display:flex;align-items:center;justify-content:center;
+    font:700 44px Inter,sans-serif;color:#fff;box-shadow:0 0 0 6px var(--noite),0 0 0 8px var(--vinho),0 0 40px rgba(179,41,63,.6)}
+  .placa{margin-top:26px;background:rgba(14,8,12,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:18px 24px;min-width:270px}
+  .placa small{font-size:10.5px;letter-spacing:.3em;color:var(--ouro);text-transform:uppercase}
+  .placa h1{font-family:"Playfair Display",serif;font-size:32px;margin-top:6px}
+  .placa p{font-size:13px;color:var(--suave);margin-top:4px}
+  .anuncio{min-height:44px;margin:22px auto 0;max-width:300px;font-family:"Playfair Display",serif;font-style:italic;color:#fff3dc;text-shadow:0 1px 10px rgba(0,0,0,.6);font-size:16px;line-height:1.4}
+  #entrada .btn{margin-top:20px}
+  .dica{margin-top:14px;font-size:12px;opacity:.75;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+
+  /* ================= CÉU (muda ao longo da história) ================= */
+  #ceu{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  #ceu .camada{position:absolute;inset:0;transition:opacity 2.5s ease}
+  #ceu .tarde{background:linear-gradient(180deg,#f2a85e 0%,#d9714a 36%,#86384a 68%,#2a1420 100%)}
+  #ceu .por{background:linear-gradient(180deg,#2a2452 0%,#6e3768 32%,#c9575d 58%,#ee9a58 78%,#3a1a22 100%)}
+  #ceu .noite{background:linear-gradient(180deg,#04060e 0%,#0b1230 45%,#1b1533 75%,#120b12 100%)}
+  #ceu .sol{position:absolute;left:50%;width:44vmin;height:44vmin;margin-left:-22vmin;border-radius:50%;
+    background:radial-gradient(circle,#fff4cc 0,#ffcf73 30%,rgba(255,150,70,.35) 52%,rgba(255,150,70,0) 70%);transition:top 3s ease,opacity 3s ease}
+  #ceu .estrelas{position:absolute;inset:0 0 35% 0;transition:opacity 3s}
+  #ceu .estrelas i{position:absolute;border-radius:50%;background:#fff;animation:brilha 3s ease-in-out infinite}
+  @keyframes brilha{50%{opacity:.25}}
+  #ceu svg.cidade{position:absolute;left:0;right:0;bottom:0;width:100%;height:24vh}
+  #ceu .janelas{transition:opacity 3s}
+
+  /* ================= MAPA (a rua) ================= */
+  #mapa{z-index:10;justify-content:flex-start}
+  .mapa-box{position:relative;width:min(440px,100vw);height:100dvh;display:flex;flex-direction:column;padding:max(14px,env(safe-area-inset-top)) 14px max(10px,env(safe-area-inset-bottom))}
+  .cab{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:rgba(12,7,12,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.09)}
+  .cab .mini{width:36px;height:36px;border-radius:50%;background:var(--vinho);display:flex;align-items:center;justify-content:center;font:700 19px Inter;flex:none}
+  .cab b{font-family:"Playfair Display",serif;font-size:20px;display:block;line-height:1.1}
+  .cab span{font-size:10.5px;letter-spacing:.14em;color:rgba(255,240,225,.75);text-transform:uppercase}
+  .trilho{position:relative;flex:1;margin-top:4px;min-height:0}
+  .trilho svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .rua{fill:none;stroke:rgba(18,12,18,.62);stroke-width:30;stroke-linecap:round;stroke-linejoin:round}
+  .borda{fill:none;stroke:rgba(255,230,200,.16);stroke-width:34;stroke-linecap:round;stroke-linejoin:round}
+  .meio{fill:none;stroke:rgba(255,235,200,.4);stroke-width:2;stroke-dasharray:8 10}
+  .andado{fill:none;stroke:var(--ambar);stroke-width:5;stroke-linecap:round;filter:drop-shadow(0 0 6px rgba(255,197,97,.9))}
+  .parada{position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;background:none;border:0;padding:0;z-index:2}
+  .parada .luz{position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px;border-radius:50%;background:#3b3236;border:3px solid #7a6d70;transition:all .8s}
+  .parada.feita .luz{background:#fff1c9;border-color:#ffc561;box-shadow:0 0 14px 5px rgba(255,197,97,.75),0 0 40px 14px rgba(255,180,80,.3)}
+  .parada.livre .luz{background:#fff;border-color:#fff;animation:chama 1.4s ease-in-out infinite}
+  .parada.final .luz{width:28px;height:28px;margin:-14px;border-radius:7px}
+  @keyframes chama{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.65)}60%{box-shadow:0 0 0 14px rgba(255,255,255,0)}}
+  .rot{position:absolute;top:50%;transform:translateY(-50%);width:max-content;max-width:54vw;text-shadow:0 1px 10px rgba(0,0,0,.75),0 0 2px rgba(0,0,0,.6)}
+  .rot.dir{left:42px;text-align:left} .rot.esq{right:42px;text-align:right}
+  .rot small{display:block;font:600 9.5px Inter;letter-spacing:.2em;color:rgba(255,235,210,.72)}
+  .rot b{display:block;font-family:"Playfair Display",serif;font-size:17px;line-height:1.15;color:rgba(255,245,235,.6);font-weight:700}
+  .parada.livre .rot b{color:#fff;font-size:19px} .parada.livre .rot small{color:var(--ambar)}
+  .parada.feita .rot b{color:#ffe9c8}
+  .parada.trancada .rot b{letter-spacing:.25em;color:rgba(255,245,235,.45)}
+  .parada:disabled{cursor:default}
+  .origem{position:absolute;font:600 10px Inter;letter-spacing:.12em;color:#fff;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.8);transform:translateY(-50%);white-space:nowrap}
+  #pino{position:absolute;left:0;top:0;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:var(--ambar);
+    box-shadow:0 0 0 5px rgba(255,197,97,.3),0 0 24px 8px rgba(255,197,97,.6);z-index:3;display:flex;align-items:center;justify-content:center;font-size:14px;pointer-events:none}
+  .rodape-mapa{text-align:center;font-family:Caveat,cursive;font-size:21px;color:#ffe6c0;padding-top:4px;min-height:32px;text-shadow:0 1px 10px rgba(0,0,0,.7)}
+
+  /* ================= PAINEL DE ESTAÇÃO ================= */
+  #painel{z-index:40;background:rgba(6,4,10,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:22px;--cor:#ffc561}
+  #painel .aura{position:absolute;left:50%;top:55%;width:130vmin;height:130vmin;transform:translate(-50%,-50%);background:radial-gradient(circle,var(--cor) 0,transparent 58%);opacity:.28;pointer-events:none}
+  .quadro{position:relative;width:min(400px,100%);background:#121212;border:1px solid #2d2d2d;border-radius:12px;padding:14px 14px 16px;box-shadow:0 20px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05)}
+  .quadro small{display:block;text-align:center;font:700 10px Inter;letter-spacing:.32em;color:var(--cor)}
+  .flaps{display:flex;justify-content:center;flex-wrap:wrap;gap:2px;margin-top:10px}
+  .flap{width:clamp(18px,5.6vw,26px);height:clamp(30px,9vw,38px);background:linear-gradient(#262626 0 49%,#0b0b0b 49% 51%,#1d1d1d 51%);border-radius:3px;
+    font:700 clamp(16px,5vw,21px)/clamp(30px,9vw,38px) "JetBrains Mono",monospace;color:var(--ambar);text-align:center;box-shadow:inset 0 0 0 1px #000}
+  .flap.esp{background:none;box-shadow:none;width:8px}
+  .flap.gira{animation:gira .07s linear}
+  @keyframes gira{50%{transform:scaleY(.2)}}
+  .cartaz{position:relative;width:min(400px,100%);margin-top:48px;text-align:center;padding:4px 20px 20px;border-radius:20px;
+    background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.16);box-shadow:0 24px 60px rgba(0,0,0,.4)}
+  .cartaz .emo{font-size:62px;margin-top:-40px;line-height:1;opacity:0;transform:scale(.4);transition:all .6s cubic-bezier(.2,1.5,.4,1);filter:drop-shadow(0 0 18px var(--cor))}
+  .polaroid{display:inline-block;background:#fbf7ef;padding:8px 8px 26px;border-radius:2px;box-shadow:0 14px 34px rgba(0,0,0,.5);transform:rotate(-4deg);filter:none}
+  .polaroid img{display:block;width:clamp(110px,32vw,140px);aspect-ratio:1;object-fit:cover;object-position:50% 25%}
+  .cartaz .emo.com-foto{font-size:0;margin-top:-44px;filter:none}
+  #fim .polaroid{transform:rotate(3deg)}
+  #fim .polaroid img{width:clamp(150px,44vw,190px)}
+  #fim .ffoto{margin-top:22px}
+  .cartaz .txt{font-family:"Playfair Display",serif;font-size:clamp(17px,4.7vw,21px);line-height:1.5;margin-top:10px}
+  .cartaz .txt i{color:#ffd9a0}
+  .cartaz .nota{font-family:Caveat,cursive;font-size:clamp(23px,6.4vw,28px);color:var(--cor);margin-top:16px;line-height:1.15}
+  .surge{opacity:0;filter:blur(6px);transform:translateY(10px);transition:all .9s ease}
+  .surge.v,.cartaz .emo.v{opacity:1;filter:none;transform:none}
+  #seguir{position:relative;margin-top:26px;opacity:0;transition:opacity .6s;pointer-events:none;background:var(--cor);color:#1d1013;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+  #seguir.v{opacity:1;pointer-events:auto}
+
+  /* ================= MÚSICA ================= */
+  #show{z-index:45;background:rgba(3,3,9,.84);text-align:center;padding:24px;overflow:hidden}
+  .janela{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+  .janela i{position:absolute;border-radius:50%;filter:blur(6px);animation:passa linear infinite}
+  @keyframes passa{from{transform:translateX(110vw)}to{transform:translateX(-30vw)}}
+  .janela:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 30%,rgba(3,3,9,.9) 85%)}
+  .tit-show{position:absolute;top:max(22px,env(safe-area-inset-top));left:0;right:0;font:600 10.5px Inter;letter-spacing:.32em;text-transform:uppercase;color:var(--ouro)}
+  .estrofe{position:relative;max-width:520px;min-height:220px;display:flex;flex-direction:column;justify-content:center}
+  .estrofe .l{font-family:"Playfair Display",serif;font-size:clamp(20px,5.6vw,30px);line-height:1.45;opacity:0;filter:blur(8px);transform:translateY(10px);transition:all 1.1s ease;text-shadow:0 2px 20px #000}
+  .estrofe .l.v{opacity:1;filter:none;transform:none}
+  .estrofe.ref .l{color:#ffd9a0;font-style:italic}
+  .estrofe.sai .l{opacity:0;filter:blur(6px);transform:translateY(-12px);transition-duration:.6s}
+  .controles{position:absolute;bottom:max(18px,env(safe-area-inset-bottom));left:16px;right:16px;display:flex;align-items:center;gap:12px}
+  .controles button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:8px 14px;font-size:13px}
+  .linhaT{flex:1;height:3px;background:rgba(255,255,255,.12);border-radius:9px;overflow:hidden}
+  .linhaT i{display:block;height:100%;width:0;background:var(--ouro)}
+  .comecar{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(3,3,9,.92);z-index:3;transition:opacity .8s}
+  .comecar p{font-family:"Playfair Display",serif;font-style:italic;color:#f1d9a8;margin-bottom:24px;font-size:clamp(20px,5.6vw,24px);line-height:1.45;max-width:320px}
+  .comecar.sumir{opacity:0;pointer-events:none}
+
+  /* ================= ESTAÇÃO FINAL: trem + carta ================= */
+  #final{z-index:50;background:rgba(4,4,14,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);overflow:hidden}
+  .plataforma{position:absolute;left:0;right:0;bottom:22%;height:4px;background:repeating-linear-gradient(90deg,var(--ambar) 0 22px,#111 22px 44px);opacity:.75}
+  .placaEst{position:absolute;top:12%;left:50%;transform:translateX(-50%);background:var(--vinho);padding:10px 18px;border-radius:6px;font:700 14px/1.35 Inter;letter-spacing:.14em;text-align:center;width:max-content;max-width:90vw;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+  .trem{position:absolute;bottom:calc(22% + 4px);left:50%;width:min(620px,150vw);height:min(190px,40vw);margin-left:calc(min(620px,150vw) / -2);
+    transform:translateX(130vw);border-radius:28px 28px 10px 10px;background:linear-gradient(#d9d4cf,#a9a29c);box-shadow:0 20px 60px rgba(0,0,0,.7)}
+  .trem.chega{transition:transform 3s cubic-bezier(.15,.7,.25,1);transform:none}
+  .trem.vai{transition:transform 1.6s cubic-bezier(.6,0,.9,.4);transform:translateX(-150vw)}
+  .trem .faixa{position:absolute;left:0;right:0;bottom:22%;height:12%;background:var(--vinho)}
+  .trem .jan{position:absolute;top:16%;height:36%;width:15%;border-radius:8px;background:linear-gradient(135deg,#ffe6b0,#d79a4a);box-shadow:inset 0 0 0 3px #555, 0 0 20px rgba(255,200,110,.5)}
+  .portas{position:absolute;left:41%;width:18%;top:10%;bottom:6%;display:flex;overflow:hidden;border-radius:6px;background:#ffdca0;box-shadow:0 0 40px 10px rgba(255,210,140,.0);transition:box-shadow 1s}
+  .portas.abre{box-shadow:0 0 50px 16px rgba(255,210,140,.7)}
+  .portas i{flex:1;background:linear-gradient(#cfc8c1,#9e968f);border:2px solid #777;transition:transform 1.1s ease}
+  .portas i:first-child{border-right:1px solid #444}.portas.abre i:first-child{transform:translateX(-100%)}.portas.abre i:last-child{transform:translateX(100%)}
+  .rodas{position:absolute;bottom:-12px;left:10%;right:10%;display:flex;justify-content:space-between}
+  .rodas b{width:26px;height:26px;border-radius:50%;background:#222;border:4px solid #555}
+
+  .despedida{position:relative;z-index:2;text-align:center;padding:0 24px;margin-top:-14vh;max-width:440px}
+  .despedida p{font-family:"Playfair Display",serif;opacity:0;transform:translateY(10px);transition:all 1.3s ease}
+  .despedida .d1,.despedida .d2{font-size:clamp(21px,6vw,27px);line-height:1.35}
+  .despedida .d2{font-style:italic;color:#ffd9a0;margin-top:6px}
+  .despedida .d3{font-family:Caveat,cursive;font-size:clamp(21px,6vw,25px);color:#f1d9a8;margin-top:26px;line-height:1.2}
+  .despedida .d4{margin-top:26px;opacity:0;transition:opacity 1s}
+  .despedida .v{opacity:1;transform:none}
+  #carta{z-index:55;background:rgba(7,5,5,.82);padding:16px}
+  .papel{width:min(420px,100%);height:min(720px,92dvh);background:var(--papel);color:var(--tinta);border-radius:6px;position:relative;
+    padding:30px 26px 22px;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.7);
+    background-image:repeating-linear-gradient(transparent 0 31px,rgba(141,31,48,.09) 31px 32px);
+    transform-origin:50% 0;transform:perspective(900px) rotateX(-88deg);opacity:0;transition:transform 1.4s cubic-bezier(.2,.9,.3,1.1),opacity .5s}
+  #carta.on .papel{transform:none;opacity:1}
+  .pag{flex:1;font-family:Caveat,cursive;font-size:clamp(20px,5.4vw,23.5px);line-height:32px;display:none;overflow:hidden}
+  .pag.on{display:block;animation:entraPag .7s ease}
+  @keyframes entraPag{from{opacity:0;transform:translateX(20px)}}
+  .pag p{margin-bottom:12px}
+  .pag .forte{font-family:"Playfair Display",serif;font-weight:700;font-size:1.02em;color:var(--vinho)}
+  .pag .ass{text-align:right;color:var(--vinho);font-size:1.15em}
+  .nav-carta{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid rgba(141,31,48,.18)}
+  .pontos{display:flex;gap:7px}.pontos i{width:8px;height:8px;border-radius:50%;background:#d9c9ad}.pontos i.on{background:var(--vinho)}
+  .nav-carta button{background:var(--vinho);color:#fff;border:0;border-radius:999px;padding:10px 18px;font-weight:600;font-size:14px}
+  .nav-carta button.volta{background:transparent;color:var(--suave);padding:10px 6px}
+
+  #fim{z-index:60;text-align:center;padding:30px;background:rgba(4,4,14,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  #fim .f{font-family:"Playfair Display",serif;opacity:0;transform:translateY(10px);transition:all 1.4s ease}
+  #fim .f.v{opacity:1;transform:none}
+  #fim .f1{font:600 12px Inter;letter-spacing:.32em;color:var(--ouro)}
+  #fim .f2{font-size:clamp(28px,8vw,40px);margin-top:10px}
+  #fim .f3{font-family:Caveat,cursive;font-size:clamp(28px,8vw,36px);color:#ffd9a0;margin-top:18px}
+  #fim .f4{margin-top:22px}
+
+  #confete{position:fixed;inset:0;pointer-events:none;z-index:70}
+  #aviso{position:fixed;left:10px;right:10px;bottom:10px;background:var(--vinho);color:#fff;padding:10px 14px;border-radius:8px;font-size:13px;z-index:99;display:none}
+
+  /* modo sincronizar */
+  #sinc{z-index:80;background:#0d0907;padding:22px;text-align:center}
+  #sinc .atual{font-family:"Playfair Display",serif;font-size:20px;line-height:1.4;min-height:140px;margin:18px 0;max-width:460px}
+  #sinc textarea{width:min(460px,100%);height:110px;margin-top:12px;font:12px monospace;border-radius:6px;padding:8px}
+</style>
+</head>
+<body>
+<!-- céu de fundo: tarde → pôr do sol → noite -->
+<div id="ceu">
+  <div class="camada tarde"></div><div class="camada por"></div><div class="camada noite"></div>
+  <div class="estrelas" id="estrelas"></div>
+  <div class="sol" id="sol"></div>
+  <svg class="cidade" id="cidade" viewBox="0 0 400 100" preserveAspectRatio="none"></svg>
+</div>
+
+<!-- ================= ENTRADA ================= -->
+<section id="entrada" class="tela on">
+  <div class="logo">T</div>
+  <div class="placa">
+    <small>Embarque especial de aniversário</small>
+    <h1>Linha Thaísa</h1>
+    <p>Empresa → José Cândido da Silveira</p>
+  </div>
+  <div class="anuncio" id="anuncio"></div>
+  <button class="btn" id="embarcar">Começar o caminho 👣</button>
+  <div class="dica">Abra sozinha e com o som ligado 😉</div>
+</section>
+
+<!-- ================= MAPA ================= -->
+<section id="mapa" class="tela">
+  <div class="mapa-box">
+    <div class="cab"><div class="mini">T</div><div><b>Linha Thaísa</b><span>Empresa → José Cândido, a pé</span></div></div>
+    <div class="trilho" id="trilho">
+      <svg id="ruaSvg"></svg>
+      <div class="origem" id="origem">🏢 Empresa · saída</div>
+      <div id="pino">👣</div>
+      <div id="paradas"></div>
+    </div>
+    <div class="rodape-mapa" id="rodapeMapa">Toque na parada que está piscando</div>
+  </div>
+</section>
+
+<!-- ================= PAINEL ================= -->
+<section id="painel" class="tela">
+  <div class="aura"></div>
+  <div class="quadro"><small id="capitulo">CAPÍTULO</small><div class="flaps" id="flaps"></div></div>
+  <div class="cartaz">
+    <div class="emo" id="pEmo"></div>
+    <div class="txt surge" id="pTxt"></div>
+    <div class="nota surge" id="pNota"></div>
+  </div>
+  <button class="btn" id="seguir">Seguir caminhando →</button>
+</section>
+
+<!-- ================= MÚSICA ================= -->
+<section id="show" class="tela">
+  <div class="janela" id="janela"></div>
+  <div class="tit-show" id="titShow">E Tudo Bem</div>
+  <div class="estrofe" id="estrofe"></div>
+  <div class="controles">
+    <button id="sairShow">← Mapa</button>
+    <div class="linhaT"><i id="progShow"></i></div>
+    <button id="pausa">❚❚</button>
+  </div>
+  <div class="comecar" id="comecar"><p id="introShow"></p><button class="btn">Ouvir 🎧</button></div>
+</section>
+
+<!-- ================= ESTAÇÃO FINAL ================= -->
+<section id="final" class="tela">
+  <div class="placaEst">ESTAÇÃO<br>JOSÉ CÂNDIDO DA SILVEIRA</div>
+  <div class="despedida" id="despedida">
+    <p class="d1">É aqui que eu sigo para a estação…</p>
+    <p class="d2">…e você vai para a casa da sua mãe.</p>
+    <p class="d3">Mas hoje, antes de cada um seguir o seu caminho,<br>eu tenho uma coisa pra te entregar.</p>
+    <button class="btn d4" id="abrirCarta">Abrir a carta 💌</button>
+  </div>
+  <div class="plataforma"></div>
+  <div class="trem" id="trem">
+    <div class="jan" style="left:6%"></div><div class="jan" style="left:23%"></div>
+    <div class="portas" id="portas"><i></i><i></i></div>
+    <div class="jan" style="left:62%"></div><div class="jan" style="left:79%"></div>
+    <div class="faixa"></div>
+    <div class="rodas"><b></b><b></b><b></b><b></b></div>
+  </div>
+</section>
+
+<section id="carta" class="tela">
+  <div class="papel">
+    <div class="pag" data-p="0">
+      <p class="forte">Thaísa,</p>
+      <p>Tem dias que passam e a gente esquece. E tem pessoas que chegam e mudam o jeito como a gente vive os dias. Você é uma delas.</p>
+      <p>Eu não sei dizer quando começou. Talvez numa daquelas conversas lá fora depois do almoço, talvez numa cutucada que você devolveu na hora, talvez numa das caminhadas até a estação em que a gente falava da vida como se o mundo pudesse esperar. Só sei que, quando percebi, os melhores minutos do meu dia tinham o seu nome.</p>
+    </div>
+    <div class="pag" data-p="1">
+      <p>Você me ouviu quando eu precisava falar, guardou coisas que eu nunca contei para mais ninguém e confiou em mim do mesmo jeito. A gente dividiu o que pesava, e isso foi deixando tudo mais leve. Você riu comigo das coisas mais bobas e foi sincera comigo quando seria mais fácil não ser. Isso diz muito de quem você é: uma mulher forte, verdadeira e muito mais especial do que você mesma imagina.</p>
+      <p>Hoje não tem mais as nossas conversas depois do almoço nem a caminhada até o metrô, mas tem uma coisa que não acabou: o lugar que você ocupa na minha vida. Esse ninguém tira.</p>
+    </div>
+    <div class="pag" data-p="2">
+      <p>Que esse novo ano te devolva tudo o que você espalha por aí: sorrisos sinceros, gente leal por perto, paz nos dias difíceis e coragem para ir atrás de tudo o que você sonha. E que, sempre que a vida apertar, você lembre que tem alguém torcendo por você em silêncio, todos os dias.</p>
+      <p>Porque tem gente que chega na vida e vira música.<br><span class="forte">Você virou a minha.</span></p>
+      <p class="forte">Feliz aniversário.</p>
+      <p class="ass">— Felipe</p>
+    </div>
+    <div class="nav-carta">
+      <button class="volta" id="cartaVolta">← voltar</button>
+      <div class="pontos" id="pontos"><i></i><i></i><i></i></div>
+      <button id="cartaSegue">continuar →</button>
+    </div>
+  </div>
+</section>
+
+<section id="fim" class="tela">
+  <p class="f f1">PRÓXIMA PARADA</p>
+  <p class="f f2">o seu novo ano.</p>
+  <div class="f ffoto"><span class="polaroid"><img src="fotos/foto-final.jpg" alt=""></span></div>
+  <p class="f f3">Feliz aniversário, Thaísa.</p>
+  <div class="f f4"><button class="btn fantasma" id="voltarMapa">Voltar ao mapa</button></div>
+</section>
+
+<!-- modo sincronizar: abra o link com #sincronizar no fim -->
+<section id="sinc" class="tela">
+  <small style="letter-spacing:.3em;color:var(--ouro);font-size:11px">MODO SINCRONIZAR</small>
+  <p style="opacity:.7;font-size:13px;margin-top:8px;max-width:420px">Toque em <b>Começar</b>. A cada vez que o cantor começar a estrofe mostrada, toque em <b>Agora!</b>. No fim, copie o texto e cole no lugar de TEMPOS no index.html.</p>
+  <div class="atual" id="sincAtual"></div>
+  <button class="btn" id="sincBtn">Começar</button>
+  <textarea id="sincSaida" readonly style="display:none"></textarea>
+</section>
+
+<canvas id="confete"></canvas>
+<div id="aviso"></div>
+<audio id="audio" src="musica.mp3" preload="auto"></audio>
+
+<script>
+/* =========================================================
+   ESTAÇÕES — edite os textos aqui
+   nome  = o que aparece no painel (letras maiúsculas, até 14 caracteres)
+   tipo  = "texto", "musica" ou "final"
+   Use <br> para quebrar linha.
+   ========================================================= */
+const ESTACOES = [
+  { titulo:"Lá Fora", sub:"capítulo 1 · o começo", nome:"LA FORA", emo:"☀️", tipo:"texto",
+    txt:"No começo éramos só colegas de trabalho. Até que, depois do almoço, a gente começou a ir lá pra fora conversar. Era pra ser só um intervalo… e virou o melhor horário do meu dia.",
+    nota:"Ninguém sabia, mas eu contava as horas pra chegar ali.",
+    foto:"fotos/foto-sol.jpg" },
+  { titulo:"O Caminho", sub:"capítulo 2 · a pé até a estação", nome:"O CAMINHO", emo:"👣", tipo:"texto",
+    txt:"Aí a conversa não cabia mais no intervalo. No fim do dia, a gente saía junto da empresa e ia a pé até perto da José Cândido, falando da vida. Eram poucos minutos de rua, mas eu esperava por eles o dia inteiro.",
+    nota:"Nunca reclamei da distância.<br>Pelo contrário: achava curta." },
+  { titulo:"Cutucada", sub:"capítulo 3 · ninguém deixava barato", nome:"CUTUCADA", emo:"🔥", tipo:"texto",
+    txt:"E no caminho ninguém deixava barato. Um cutucava, o outro devolvia, até na hora de se despedir.<br><br><i>Quem aguenta mais? Será que 3 minutos eu aguento? Ou será que vou te cansar? rsrsrs</i>",
+    nota:"Resposta só mediante comprovação." },
+  { titulo:"Batom", sub:"capítulo 4 · a provocação continuava", nome:"BATOM", emo:"💄", tipo:"texto",
+    txt:"E quando a gente não estava junto, a provocação continuava pelo celular… Aquela figurinha que você manda, mordendo o lábio e passando batom.",
+    nota:"Eu deixo você morder de leve…<br>mas não a boca." },
+  { titulo:"Confidências", sub:"capítulo 5 · o que pesava", nome:"CONFIDENCIAS", emo:"🤫", tipo:"texto",
+    txt:"Com o tempo, as conversas foram ficando mais fundas. A gente começou a dividir o que pesava, coisas que não contava pra mais ninguém. Você me ouviu sem julgar, e eu aprendi a te ouvir também.",
+    nota:"O que foi dito ali ficou só entre nós." },
+  { titulo:"A Verdade", sub:"capítulo 6 · a conversa difícil", nome:"A VERDADE", emo:"🤝", tipo:"texto",
+    txt:"Um dia eu te fiz perguntas difíceis. Você podia ter fugido, mas me olhou de frente e respondeu com sinceridade. Ali eu entendi que podia confiar em você de verdade, e a nossa amizade ficou ainda mais forte.",
+    nota:"Foi a conversa mais difícil<br>e a que mais nos aproximou." },
+  { titulo:"Quem Você É", sub:"capítulo 7 · o que eu vejo em você", nome:"QUEM VOCE E", emo:"✨", tipo:"texto",
+    txt:"Depois de tudo isso, eu sei bem quem você é: forte quando a vida aperta, verdadeira quando seria mais fácil fingir, e linda de um jeito que você nem percebe.",
+    nota:"Queria que você se enxergasse com os meus olhos, só por um dia.",
+    foto:"fotos/foto-sorriso.jpg" },
+  { titulo:"E Tudo Bem", sub:"capítulo 8 · virou música", nome:"E TUDO BEM", emo:"🎵", tipo:"musica",
+    txt:"Tudo isso eu não consegui guardar só pra mim.<br>Então virou música." },
+  { titulo:"Estação José Cândido", sub:"capítulo 9 · onde a gente se despedia", nome:"JOSE CANDIDO", emo:"🚇", tipo:"final" }
+];
+
+/* Letra: cada item é uma estrofe. "ref" = refrão (aparece dourado e em itálico) */
+const LETRA = [
+ ["Eu não sei dizer quando começou|Talvez num sorriso, talvez num olhar|Foi chegando de mansinho|Sem pedir licença pra ficar"],
+ ["Eu tentei chamar de carinho|Mas meu coração quis complicar|Quando eu vi, já tava pensando|Em você sem nem perceber, sem planejar"],
+ ["E eu não vou negar|O que eu senti foi de verdade|Você foi sincera comigo|E isso já vale mais que qualquer vontade"],
+ ["Eu me apaixonei, e tudo bem|Você não precisa sentir igual|Eu só queria que você soubesse|Que pra mim você é especial","ref"],
+ ["Se a nossa história é só amizade|Eu vou respeitar o seu coração|Porque tem gente que chega na vida|E vira música, mesmo sem virar paixão","ref"],
+ ["Você me faz rir, você me faz bem|E eu gosto de ter você por perto|Talvez o amor tenha muitos jeitos|E nem todo amor precisa dar certo"],
+ ["Eu não quero mudar nossa história|Nem fazer você se sentir pressionada|Só queria guardar esse sentimento|Como uma lembrança bonita da nossa estrada"],
+ ["E eu não vou negar|O que eu senti foi de verdade|Você foi sincera comigo|E isso já vale mais que qualquer vontade"],
+ ["Eu me apaixonei, e tudo bem|Você não precisa sentir igual|Eu só queria que você soubesse|Que pra mim você é especial","ref"],
+ ["Se a nossa história é só amizade|Eu vou respeitar o seu coração|Porque tem gente que chega na vida|E vira música, mesmo sem virar paixão","ref"],
+ ["Talvez amanhã seja só lembrança|Talvez seja amizade pra valer|Mas uma coisa eu tenho certeza|Foi bom demais conhecer você"],
+ ["Eu me apaixonei, e tudo bem|Não vou transformar isso em dor|Você foi sincera comigo|E eu vou guardar todo esse amor","ref"],
+ ["Se a nossa história é só amizade|Eu vou respeitar o seu coração|Porque tem gente que chega na vida|E vira música, mesmo sem virar paixão","ref"],
+ ["E se algum dia você ouvir essa canção|E lembrar de tudo que eu te falei|Saiba que foi tudo de verdade|Eu me apaixonei…|E não me arrependo do que senti."]
+];
+
+/* Segundo em que cada estrofe começa (14 valores). APROXIMADOS —
+   para acertar, abra o link com #sincronizar no fim e cole aqui o resultado. */
+let TEMPOS = [10,24,38,50,63,78,92,106,118,131,146,160,174,190];
+
+/* =========================================================
+   LÓGICA
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const espera = ms => new Promise(r=>setTimeout(r,ms));
+const audio = $("#audio");
+function mostra(id,on){ $(id).classList.toggle("on",on); }
+function aviso(msg){ const a=$("#aviso"); a.textContent="⚠️ "+msg; a.style.display="block"; clearTimeout(a._t); a._t=setTimeout(()=>a.style.display="none",7000); }
+audio.addEventListener("error",()=>aviso("Não consegui carregar a música (musica.mp3). Confira se o arquivo está na mesma pasta do index.html."));
+window.addEventListener("error",e=>aviso("Erro: "+e.message));
+
+/* ---------- sons (gerados no navegador, sem arquivos) ---------- */
+let ctx=null;
+function somOk(){ try{ ctx = ctx || new (window.AudioContext||window.webkitAudioContext)(); if(ctx.state==="suspended") ctx.resume(); return true; }catch(e){ return false; } }
+function tom(freq,ini,dur,vol=.18,tipo="sine"){ try{ if(!somOk())return; const o=ctx.createOscillator(),g=ctx.createGain(); o.type=tipo; o.frequency.value=freq;
+  g.gain.setValueAtTime(0,ctx.currentTime+ini); g.gain.linearRampToValueAtTime(vol,ctx.currentTime+ini+.02); g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+ini+dur);
+  o.connect(g).connect(ctx.destination); o.start(ctx.currentTime+ini); o.stop(ctx.currentTime+ini+dur+.05); }catch(e){} }
+function chime(){ tom(659,0,1.1); tom(523,.45,1.4); tom(784,.9,1.6,.14); }   // "plim-plom" de estação
+function clack(){ try{ if(!somOk())return; const n=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,n,ctx.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n,6); const s=ctx.createBufferSource(),g=ctx.createGain(); g.gain.value=.25; s.buffer=b; s.connect(g).connect(ctx.destination); s.start(); }catch(e){} }
+function trilhos(seg){ try{ if(!somOk())return; const n=Math.floor(ctx.sampleRate*seg),b=ctx.createBuffer(1,n,ctx.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<n;i++){ const t=i/ctx.sampleRate; d[i]=(Math.random()*2-1)*(.5+.5*Math.sin(t*Math.PI*2*2.2)); }
+  const s=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain(); f.type="lowpass"; f.frequency.value=700; s.buffer=b;
+  g.gain.setValueAtTime(.0001,ctx.currentTime); g.gain.linearRampToValueAtTime(.35,ctx.currentTime+seg*.25); g.gain.linearRampToValueAtTime(.0001,ctx.currentTime+seg);
+  s.connect(f).connect(g).connect(ctx.destination); s.start(); }catch(e){} }
+function freio(){ tom(1900,0,.9,.05,"sawtooth"); tom(2100,.1,.8,.04,"sawtooth"); }
+
+/* ---------- entrada ---------- */
+(async function anunciar(){
+  const t="Atenção, Thaísa: saindo da empresa. Hoje o caminho é a pé, como sempre.", el=$("#anuncio");
+  await espera(800); for(const c of t){ el.textContent+=c; await espera(42); }
+})();
+$("#embarcar").onclick = () => { chime(); audio.load(); mostra("#entrada",false); mostra("#mapa",true); setTimeout(posicionarPino,60); };
+
+/* ---------- céu ---------- */
+(function montarCeu(){
+  const est=$("#estrelas");
+  for(let k=0;k<70;k++){ const s=document.createElement("i"), r=Math.random()<.85?1.5:2.5;
+    s.style.cssText=`width:${r}px;height:${r}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:-${Math.random()*3}s`; est.appendChild(s); }
+  let svg="", x=0, jan="";
+  while(x<400){ const w=14+Math.random()*30, alt=25+Math.random()*60; svg+=`<rect x="${x}" y="${100-alt}" width="${w}" height="${alt}" fill="#0d0910"/>`;
+    for(let yy=100-alt+6; yy<96; yy+=8) for(let xx=x+3; xx<x+w-4; xx+=6) if(Math.random()<.35) jan+=`<rect x="${xx}" y="${yy}" width="2.4" height="3.2" fill="#ffd27a"/>`;
+    x+=w+1; }
+  $("#cidade").innerHTML=svg+`<g class="janelas" id="janelas">${jan}</g>`;
+})();
+function setCeu(p){
+  p=Math.max(0,Math.min(1,p));
+  const tarde=Math.max(0,1-p*2.2), noite=Math.min(1,Math.max(0,(p-.45)*2.2)), por=Math.max(0,1-tarde-noite);
+  $("#ceu .tarde").style.opacity=tarde; $("#ceu .por").style.opacity=por; $("#ceu .noite").style.opacity=noite;
+  const sol=$("#sol"); sol.style.top=(14+p*70)+"%"; sol.style.opacity=Math.max(0,1-p*1.6);
+  $("#estrelas").style.opacity=noite; $("#janelas").style.opacity=Math.min(1,Math.max(.08,(p-.25)*1.8));
+}
+const ceuDoCapitulo = i => i/(ESTACOES.length-1);
+setCeu(0);
+
+/* ---------- mapa: a rua da empresa até José Cândido ---------- */
+const CORES=["#ffc561","#ff9a5c","#ff5c5c","#ff73b0","#74a3ff","#b99cff","#ffe08a","#ffd27a","#ffd27a"];
+let proxima = 0;          // índice da próxima parada liberada
+let pinoEm = -1;          // onde o pino está (-1 = empresa)
+let pontos = [], segs = [];
+const NS="http://www.w3.org/2000/svg";
+ESTACOES.forEach((e,i)=>{
+  const b=document.createElement("button"); b.className="parada"+(e.tipo==="final"?" final":""); b.dataset.i=i;
+  b.innerHTML=`<span class="luz"></span><span class="rot"><small>CAPÍTULO ${i+1}</small><b></b></span>`;
+  b.onclick=()=>chegar(i); $("#paradas").appendChild(b);
+});
+function desenharMapa(){
+  const tr=$("#trilho"), W=tr.clientWidth, H=tr.clientHeight, n=ESTACOES.length;
+  if(!W||!H) return;
+  const topo=26, base=H-28, passo=(base-topo-34)/(n-1);
+  const origem={x:W*.5,y:topo};
+  pontos=ESTACOES.map((e,i)=>({x: i===n-1 ? W*.3 : W*(i%2===0?.17:.83), y: topo+34+i*passo}));
+  const svg=$("#ruaSvg"); svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.innerHTML="";
+  const todos=[origem,...pontos];
+  let d=`M${origem.x} ${origem.y}`;
+  segs=[];
+  for(let k=1;k<todos.length;k++){ const a=todos[k-1], c=todos[k], m=(c.y-a.y)/2;
+    const s=`M${a.x} ${a.y} C${a.x} ${a.y+m} ${c.x} ${c.y-m} ${c.x} ${c.y}`; d+=` C${a.x} ${a.y+m} ${c.x} ${c.y-m} ${c.x} ${c.y}`; segs.push(s); }
+  for(const [cls,dd] of [["borda",d],["rua",d],["meio",d]]){ const pa=document.createElementNS(NS,"path"); pa.setAttribute("class",cls); pa.setAttribute("d",dd); svg.appendChild(pa); }
+  segs=segs.map((s,k)=>{ const pa=document.createElementNS(NS,"path"); pa.setAttribute("class","andado"); pa.setAttribute("d",s); svg.appendChild(pa);
+    const L=pa.getTotalLength(); pa.style.strokeDasharray=L; pa.style.strokeDashoffset= k<=pinoEm ? 0 : L; return {el:pa,L}; });
+  const o=$("#origem"); o.style.left=(origem.x+18)+"px"; o.style.top=origem.y+"px";
+  [...$("#paradas").children].forEach((b,i)=>{ b.style.left=pontos[i].x+"px"; b.style.top=pontos[i].y+"px";
+    const r=b.querySelector(".rot"); r.className="rot "+(pontos[i].x<W*.5||i===n-1?"dir":"esq"); });
+  const pp = pinoEm<0 ? origem : pontos[pinoEm]; $("#pino").style.left=pp.x+"px"; $("#pino").style.top=pp.y+"px";
+}
+const posicionarPino = () => { desenharMapa(); atualizarMapa(); };
+addEventListener("resize",desenharMapa);
+
+function atualizarMapa(){
+  [...$("#paradas").children].forEach((b,i)=>{
+    b.classList.toggle("feita",i<proxima); b.classList.toggle("livre",i===proxima); b.classList.toggle("trancada",i>proxima); b.disabled=i>proxima;
+    b.querySelector(".rot b").textContent = i>proxima ? "???" : ESTACOES[i].titulo;
+  });
+  const restam=ESTACOES.length-proxima;
+  $("#rodapeMapa").textContent = proxima>=ESTACOES.length ? "Caminho completo. Pode rever qualquer parada 💛" : (proxima===0 ? "Toque na parada que está piscando" : (restam===1?"Chegando na estação…":`Faltam ${restam} paradas`));
+  setCeu(ceuDoCapitulo(Math.min(proxima,ESTACOES.length-1)));
+}
+
+function andarAte(i){
+  return new Promise(res=>{
+    if(i!==pinoEm+1 || !segs[i]){ pinoEm=i; desenharMapa(); return res(); }   // revisitar: pula direto
+    const {el,L}=segs[i], ini=performance.now(), dur=1500;
+    (function passo(t){ const k=Math.min(1,(t-ini)/dur), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+      const pt=el.getPointAtLength(L*e); $("#pino").style.left=pt.x+"px"; $("#pino").style.top=pt.y+"px"; el.style.strokeDashoffset=L*(1-e);
+      if(k<1) requestAnimationFrame(passo); else { pinoEm=i; res(); } })(ini);
+  });
+}
+
+async function chegar(i){
+  if(i>proxima) return;
+  if(pinoEm!==i){ clack(); await andarAte(i); await espera(250); }
+  const e=ESTACOES[i];
+  if(e.tipo==="texto") abrirPainel(i);
+  else if(e.tipo==="musica") abrirShow(i);
+  else abrirFinal(i);
+}
+function concluir(i){ if(i===proxima){ proxima++; } atualizarMapa(); }
+desenharMapa(); atualizarMapa(); setCeu(0);
+
+/* ---------- painel com plaquinhas ---------- */
+const CHARS="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+async function abrirPainel(i){
+  const e=ESTACOES[i], fl=$("#flaps");
+  $("#capitulo").textContent="CAPÍTULO "+(i+1);
+  $("#painel").style.setProperty("--cor",CORES[i]); setCeu(ceuDoCapitulo(i));
+  $("#seguir").onclick=()=>{ $("#seguir").classList.remove("v"); mostra("#painel",false); concluir(i); };
+  $("#pEmo").classList.remove("v"); $("#pTxt").classList.remove("v"); $("#pNota").classList.remove("v"); $("#seguir").classList.remove("v");
+  if(e.foto){ $("#pEmo").innerHTML=`<span class="polaroid"><img src="${e.foto}" alt=""></span>`; $("#pEmo").classList.add("com-foto"); } else { $("#pEmo").textContent=e.emo; $("#pEmo").classList.remove("com-foto"); } $("#pTxt").innerHTML=e.txt; $("#pNota").innerHTML=e.nota||"";
+  fl.innerHTML=[...e.nome].map(c=>c===" "?`<span class="flap esp"></span>`:`<span class="flap"> </span>`).join("");
+  mostra("#painel",true); chime();
+  await espera(500);
+  const tiles=[...fl.children];
+  await Promise.all(tiles.map(async (t,k)=>{
+    const alvo=e.nome[k]; if(alvo===" ") return;
+    const giros=5+k*2;
+    for(let g=0;g<giros;g++){ t.textContent=g===giros-1?alvo:CHARS[Math.random()*CHARS.length|0]; t.classList.remove("gira"); void t.offsetWidth; t.classList.add("gira"); if(g%2===0) clack(); await espera(65); }
+  }));
+  await espera(300); $("#pEmo").classList.add("v");
+  await espera(500); $("#pTxt").classList.add("v");
+  await espera(1400); $("#pNota").classList.add("v");
+  await espera(900); $("#seguir").classList.add("v");
+}
+
+/* ---------- música ---------- */
+(function janela(){ const j=$("#janela"), cores=["255,197,97","255,150,90","200,220,255","255,230,180"];
+  for(let k=0;k<26;k++){ const s=document.createElement("i"), r=6+Math.random()*34, c=cores[k%4];
+    s.style.cssText=`width:${r}px;height:${r}px;top:${Math.random()*100}%;background:rgba(${c},${.15+Math.random()*.35});animation-duration:${4+Math.random()*9}s;animation-delay:-${Math.random()*12}s`; j.appendChild(s); } })();
+let idxEstrofe=-1, timers=[], showIdx=0;
+function abrirShow(i){ showIdx=i; setCeu(1); $("#introShow").innerHTML=ESTACOES[i].txt||""; $("#titShow").textContent="Capítulo "+(i+1)+" · "+ESTACOES[i].titulo; idxEstrofe=-1; $("#estrofe").innerHTML=""; $("#progShow").style.width="0"; $("#comecar").classList.remove("sumir"); mostra("#show",true); }
+$("#comecar").onclick=()=>{ $("#comecar").classList.add("sumir"); try{ audio.currentTime=0; }catch(e){} audio.play().catch(e=>aviso("A música não tocou ("+e.name+"). Toque em ▶ embaixo para tentar de novo.")); };
+function mostrarEstrofe(i){
+  idxEstrofe=i; timers.forEach(clearTimeout); timers=[];
+  const box=$("#estrofe"); box.classList.add("sai");
+  timers.push(setTimeout(()=>{
+    const [txt,cls]=LETRA[i]; box.className="estrofe "+(cls||"");
+    box.innerHTML=txt.split("|").map(l=>`<p class="l">${l}</p>`).join("");
+    const dur=(TEMPOS[i+1]||audio.duration||217)-TEMPOS[i];
+    const passo=Math.min(2600,Math.max(900,(dur*1000*.7)/box.children.length));
+    [...box.children].forEach((p,k)=>timers.push(setTimeout(()=>p.classList.add("v"),k*passo)));
+  },600));
+}
+audio.addEventListener("timeupdate",()=>{
+  if(!$("#show").classList.contains("on")) return;
+  const t=audio.currentTime, d=audio.duration||217; $("#progShow").style.width=(t/d*100)+"%";
+  let i=-1; for(let k=0;k<TEMPOS.length;k++) if(t>=TEMPOS[k]) i=k;
+  if(i!==idxEstrofe && i>=0) mostrarEstrofe(i);
+});
+audio.addEventListener("ended",()=>{ if(!$("#show").classList.contains("on")) return;
+  const box=$("#estrofe"); box.className="estrofe ref"; box.innerHTML=`<p class="l v">E tudo bem.</p>`; concluir(showIdx); });
+$("#pausa").onclick=()=> audio.paused?audio.play():audio.pause();
+audio.onplay=audio.onpause=()=>$("#pausa").textContent=audio.paused?"▶":"❚❚";
+$("#sairShow").onclick=()=>{ audio.pause(); mostra("#show",false); concluir(showIdx); };
+
+/* ---------- estação final ---------- */
+let pagina=0;
+let finalIdx=0;
+async function abrirFinal(i){
+  finalIdx=i; setCeu(1);
+  const trem=$("#trem"), portas=$("#portas");
+  trem.className="trem"; portas.classList.remove("abre");
+  document.querySelectorAll("#despedida > *").forEach(e=>e.classList.remove("v"));
+  mostra("#final",true); chime();
+  for(const c of [".d1",".d2",".d3",".d4"]){ await espera(1700); $("#despedida "+c).classList.add("v"); }
+}
+$("#abrirCarta").onclick=()=>{ document.querySelectorAll("#despedida > *").forEach(e=>e.classList.remove("v")); pagina=0; mostrarPagina(); mostra("#carta",true); concluir(finalIdx); };
+function mostrarPagina(){
+  document.querySelectorAll(".pag").forEach((p,k)=>p.classList.toggle("on",k===pagina));
+  [...$("#pontos").children].forEach((d,k)=>d.classList.toggle("on",k===pagina));
+  $("#cartaVolta").style.visibility = pagina? "visible":"hidden";
+  $("#cartaSegue").textContent = pagina===2 ? "Até amanhã →" : "continuar →";
+}
+$("#cartaVolta").onclick=()=>{ if(pagina>0){ pagina--; mostrarPagina(); } };
+$("#cartaSegue").onclick=async()=>{
+  if(pagina<2){ pagina++; mostrarPagina(); return; }
+  // o trem dele chega e parte; ela segue para a casa da mãe
+  mostra("#carta",false);
+  document.querySelectorAll("#despedida > *").forEach(e=>e.classList.remove("v"));
+  const trem=$("#trem"), portas=$("#portas");
+  await espera(800); trilhos(3.4); trem.classList.add("chega");
+  await espera(2400); freio();
+  await espera(900); portas.classList.add("abre");
+  await espera(1800); portas.classList.remove("abre");
+  await espera(1200); trem.className="trem vai"; trilhos(1.8);
+  await espera(1300); mostra("#final",false); mostra("#fim",true); chime(); confete();
+  for(const c of [".f1",".f2",".ffoto",".f3",".f4"]){ await espera(1300); $("#fim "+c).classList.add("v"); }
+};
+$("#voltarMapa").onclick=()=>{ document.querySelectorAll("#fim .f").forEach(e=>e.classList.remove("v")); mostra("#fim",false); atualizarMapa(); };
+
+/* ---------- confete ---------- */
+function confete(){
+  const c=$("#confete"), x=c.getContext("2d"); c.width=innerWidth; c.height=innerHeight;
+  const cores=["#8d1f30","#e2b25c","#f1d9a8","#b3293f","#fff"];
+  const ps=Array.from({length:160},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.6,v:1.6+Math.random()*3,r:3+Math.random()*4,a:Math.random()*6,cor:cores[Math.random()*5|0]}));
+  let t=0; (function f(){ x.clearRect(0,0,c.width,c.height);
+    ps.forEach(p=>{p.y+=p.v;p.a+=.1;x.fillStyle=p.cor;x.save();x.translate(p.x+Math.sin(p.a)*8,p.y);x.rotate(p.a);x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore();});
+    if(++t<320) requestAnimationFrame(f); else x.clearRect(0,0,c.width,c.height); })();
+}
+
+/* ---------- modo sincronizar ---------- */
+if(location.hash==="#sincronizar"){
+  mostra("#entrada",false); mostra("#sinc",true);
+  let k=-1; const novos=[]; const btn=$("#sincBtn"), atual=$("#sincAtual"), saida=$("#sincSaida");
+  const verso=i=>LETRA[i][0].split("|").join("<br>");
+  atual.innerHTML="Primeira estrofe:<br><br>"+verso(0);
+  btn.onclick=()=>{
+    if(k===-1){ audio.currentTime=0; audio.play().catch(e=>aviso(e.message)); btn.textContent="Agora!"; k=0; atual.innerHTML="Toque em <b>Agora!</b> quando ele começar:<br><br>"+verso(0); return; }
+    novos.push(Math.round(audio.currentTime*10)/10); k++;
+    if(k>=LETRA.length){ audio.pause(); btn.style.display="none"; atual.textContent="Pronto! Copie o texto abaixo:"; saida.style.display="block"; saida.value="let TEMPOS = ["+novos.join(",")+"];"; saida.select(); return; }
+    atual.innerHTML="Toque em <b>Agora!</b> quando ele começar:<br><br>"+verso(k);
+  };
+}
+</script>
+</body>
+</html>
