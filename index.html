@@ -256,6 +256,7 @@
   #atualiza.instalando #atualizar,#atualiza.instalando #pularHistoria{display:none}
   #atualiza.instalando .up-barra,#atualiza.instalando .up-msg{display:block}
   #atualiza .btn.texto{margin-top:6px;font-size:13.5px}
+  .marca-versao{font-size:10.5px;color:#9aa0a6;text-align:center;margin-top:8px;letter-spacing:.04em}
 
   /* presente para desembrulhar (dentro do cartão) */
   .caixa{display:none;flex-direction:column;align-items:center;gap:8px;width:100%;background:none;border:0;padding:0 0 4px;color:var(--texto2);font-size:14px;font-weight:500}
@@ -329,6 +330,7 @@
     <p class="up-msg" id="upMsg"></p>
   </div>
   <button class="btn texto" id="pularHistoria">Rever a nossa história</button>
+  <p class="marca-versao">arquivo v14.11-c</p>
 </section>
 
 <!-- ================= ENTRADA ================= -->
@@ -351,6 +353,7 @@
     <button class="btn largo" id="embarcar">Iniciar caminho</button>
     <button class="btn texto largo" id="rever" style="display:none">Abrir a edição de aniversário</button>
     <p class="dica" id="dica"></p>
+    <p class="marca-versao">arquivo v14.11-c</p>
   </div>
 </section>
 
@@ -599,7 +602,7 @@ const MODOS={
 let modo="historia";
 // A edição de aniversário só existe a partir do dia 14 (no relógio do celular dela).
 // Para testar antes: abra o link com #aniversario no fim. Para ver como era antes: #antes
-const ANIVERSARIO=new Date(2026,10,14);   // 14 de novembro de 2026 (mês começa em 0)
+const ANIVERSARIO=new Date(2026,10,13);   // liberada desde 13 de novembro de 2026 (mês começa em 0)
 const ehAniversario = location.hash==="#antes" ? false : (location.hash==="#aniversario" || Date.now()>=ANIVERSARIO.getTime());
 let boloVisto=false;
 let proxima=0, pinoEm=-1, celebrado=false, despedidos=false, rotaEl=null, rotaL=0, rotaFeita=null, rotaFeitaC=null, PONTOS=[];
