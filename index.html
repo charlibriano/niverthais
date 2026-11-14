@@ -237,11 +237,99 @@
   #flash.on{animation:flash .7s ease-out}
   @keyframes flash{0%{opacity:0}12%{opacity:.92}100%{opacity:0}}
   #confete{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
+  /* ================= EDIÇÃO DE ANIVERSÁRIO: tela de atualização ================= */
+  #atualiza{z-index:32;background:#fff;align-items:center;justify-content:center;text-align:center;padding:28px 26px}
+  .up-icone{position:relative;width:92px;height:92px;border-radius:24px;background:linear-gradient(140deg,#c93a52,#8d1f30);display:flex;align-items:center;justify-content:center;
+    font:700 50px "Playfair Display",serif;color:#fff;box-shadow:0 12px 30px rgba(141,31,48,.35)}
+  .up-icone i{position:absolute;right:-8px;top:-8px;width:28px;height:28px;border-radius:50%;background:#d93025;border:3px solid #fff;font:700 13px/22px Inter,sans-serif;font-style:normal}
+  .up-sub{margin-top:22px;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--azul)}
+  #atualiza h1{font-family:"Playfair Display",serif;font-size:clamp(32px,9.500vw,40px);line-height:1.1;margin-top:6px}
+  .up-ver{font-size:14.5px;color:var(--texto2);margin-top:6px}
+  .up-nov{list-style:none;text-align:left;margin:22px 0 0;padding:16px 18px;border:1px solid var(--linha);border-radius:var(--raio);width:100%;max-width:340px}
+  .up-nov li{position:relative;padding-left:30px;font-size:15px;line-height:1.35;margin:9px 0}
+  .up-nov li:before{content:"";position:absolute;left:0;top:-1px;width:21px;height:21px;border-radius:50%;
+    background:#e6f4ea url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23188038' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' d='M6.500 12.500l3.500 3.500 7.500-8'/%3E%3C/svg%3E") center/70% no-repeat}
+  .up-acao{width:100%;max-width:340px;margin-top:22px;min-height:64px}
+  .up-barra{display:none;height:8px;border-radius:9px;background:#e8eaed;overflow:hidden;margin-top:14px}
+  .up-barra i{display:block;height:100%;width:0;border-radius:9px;background:var(--azul);transition:width 1.050s ease}
+  .up-msg{display:none;font-size:14px;color:var(--texto2);margin-top:12px;min-height:20px}
+  #atualiza.instalando #atualizar,#atualiza.instalando #pularHistoria{display:none}
+  #atualiza.instalando .up-barra,#atualiza.instalando .up-msg{display:block}
+  #atualiza .btn.texto{margin-top:6px;font-size:13.5px}
+
+  /* presente para desembrulhar (dentro do cartão) */
+  .caixa{display:none;flex-direction:column;align-items:center;gap:8px;width:100%;background:none;border:0;padding:0 0 4px;color:var(--texto2);font-size:14px;font-weight:500}
+  .caixa svg{width:150px;height:150px;overflow:visible;animation:quica 1.400s ease-in-out infinite}
+  @keyframes quica{50%{transform:translateY(-6px) rotate(-2deg)}}
+  .lugar.fechado .caixa{display:flex}
+  .lugar.fechado .corpo>.surge{display:none}
+  .lugar.fechado .rodape{visibility:hidden}
+  .caixa .tampa{transition:transform .65s cubic-bezier(.3,-.3,.4,1),opacity .45s .2s;transform-box:fill-box;transform-origin:50% 100%}
+  .lugar.abrindo .caixa .tampa{transform:translateY(-60px) rotate(-22deg);opacity:0}
+  .lugar.abrindo .caixa svg{animation:none}
+  .caixa .brilho{opacity:0;transition:opacity .35s;transform-box:fill-box;transform-origin:center}
+  .lugar.abrindo .caixa .brilho{opacity:1;animation:estoura .7s ease-out}
+  @keyframes estoura{from{transform:scale(.3)}to{transform:scale(1.250)}}
+  .lugar.revelado .corpo>.surge{animation:entraPag .7s ease both}
+  .lugar.revelado .corpo>.surge:nth-child(2){animation-delay:.12s}
+  .lugar.revelado .corpo>.surge:nth-child(3){animation-delay:.3s}
+  .lugar.revelado .corpo>.surge:nth-child(4){animation-delay:.7s}
+  .lugar.cupom .txt{border:2px dashed var(--cor);border-radius:14px;padding:14px 16px;font-family:"Playfair Display",serif;font-size:18px;line-height:1.4;color:var(--texto);background:#fff8fb}
+  .mp .balao{animation:flutua 2.800s ease-in-out infinite alternate}
+  @keyframes flutua{to{transform:translateY(-5px)}}
+  #fim .f4{display:flex;flex-direction:column;align-items:center;gap:10px}
+
+  /* ================= SURPRESA DO DIA: BOLO ================= */
+  #bolo{z-index:58;background:radial-gradient(circle at 50% 44%,#70344a 0,#2f1522 52%,#170b12 100%);align-items:center;justify-content:center;color:#fff;text-align:center;padding:22px}
+  .bolo-tit{font-family:"Playfair Display",serif;font-size:clamp(24px,7vw,31px);line-height:1.2;min-height:2.4em;display:flex;align-items:flex-end;justify-content:center;transition:opacity .7s}
+  #boloSvg{width:min(88%,350px);margin-top:4px;overflow:visible;--sopro:0}
+  .bolo-status{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;margin-top:8px;font-size:14px;line-height:1.35;color:#ffe3b8;transition:opacity .6s}
+  .bolo-fim{display:none;flex-direction:column;align-items:center;gap:16px;margin-top:8px;animation:entraPag 1s ease}
+  .bolo-fim p{font-family:"Playfair Display",serif;font-style:italic;font-size:19px;color:#ffe3b8}
+  #bolo.apagado .bolo-status{display:none} #bolo.apagado .bolo-fim{display:flex}
+  #boloBrilho{transition:opacity .5s}
+  .vela{cursor:pointer}
+  .vela .chama{transform-box:fill-box;transform-origin:50% 100%;animation:tremula .2s ease-in-out infinite alternate;transition:opacity .2s}
+  @keyframes tremula{
+    from{transform:skewX(calc(var(--sopro) * -40deg - 3deg)) scaleY(calc(1 - var(--sopro) * .4))}
+    to{transform:skewX(calc(var(--sopro) * -32deg + 3deg)) scaleY(calc(1.07 - var(--sopro) * .4))}}
+  .vela .halo{transition:opacity .25s}
+  .vela.apagada .chama,.vela.apagada .halo{opacity:0}
+  .vela .fumaca{opacity:0;fill:none;stroke:rgba(255,255,255,.6);stroke-width:2;stroke-linecap:round}
+  .vela.apagada .fumaca{animation:fumaca 1.7s ease-out forwards}
+  @keyframes fumaca{0%{opacity:.85;transform:translateY(0)}100%{opacity:0;transform:translateY(-36px)}}
+  .mp .pin.ouro .gota{fill:#F9AB00}
+  .mp .chip.ouro .t{fill:#b06000}
+  .sheet.presente small{color:#b06000}
+  .sheet.presente b{white-space:normal;font-size:17px;line-height:1.15}
+  .sheet.presente .btn{background:#F9AB00;color:#3c2a00;box-shadow:0 2px 8px rgba(249,171,0,.5);animation:chama-ouro 1.6s ease-in-out infinite}
+  @keyframes chama-ouro{50%{box-shadow:0 0 0 8px rgba(249,171,0,.22)}}
+  .abertura .btn.texto{margin-top:6px;min-height:40px;font-size:13.5px}
+  .abertura.niver .dica{display:none}
   #aviso{position:absolute;left:12px;right:12px;bottom:12px;background:#3c4043;color:#fff;padding:12px 14px;border-radius:12px;font-size:13px;z-index:99;display:none;box-shadow:var(--sombra2)}
 </style>
 </head>
 <body>
 <main id="app">
+
+<!-- ================= EDIÇÃO DE ANIVERSÁRIO: "atualização" ================= -->
+<section id="atualiza" class="tela">
+  <div class="up-icone">T<i>1</i></div>
+  <p class="up-sub">Atualização disponível</p>
+  <h1>Linha Thaísa</h1>
+  <p class="up-ver">Versão 14.11 · Edição de aniversário</p>
+  <ul class="up-nov">
+    <li>Um caminho novo, só seu</li>
+    <li>Presentes para desembrulhar</li>
+    <li>Uma surpresa no final</li>
+  </ul>
+  <div class="up-acao">
+    <button class="btn largo" id="atualizar">Atualizar agora</button>
+    <div class="up-barra"><i id="upBarra"></i></div>
+    <p class="up-msg" id="upMsg"></p>
+  </div>
+  <button class="btn texto" id="pularHistoria">Rever a nossa história</button>
+</section>
 
 <!-- ================= ENTRADA ================= -->
 <section id="entrada" class="tela on">
@@ -261,6 +349,7 @@
       </div>
     </div>
     <button class="btn largo" id="embarcar">Iniciar caminho</button>
+    <button class="btn texto largo" id="rever" style="display:none">Abrir a edição de aniversário</button>
     <p class="dica" id="dica"></p>
   </div>
 </section>
@@ -270,7 +359,7 @@
   <svg id="mapaSvg" class="mp" viewBox="0 22 360 640" preserveAspectRatio="xMidYMid slice"></svg>
   <div class="gps-topo">
     <div class="marcas"><i></i><s></s><i></i></div>
-    <div class="lin"><b>Empresa</b><br>Perto da Estação José Cândido</div>
+    <div class="lin" id="gpsLin"><b>Empresa</b><br>Perto da Estação José Cândido</div>
     <div class="meta" id="metaPe"><span>Linha Thaísa</span></div>
   </div>
   <div class="sheet" id="sheet">
@@ -287,6 +376,17 @@
       <h2 class="surge" id="lugarTit"></h2>
       <p class="txt surge" id="lugarTxt"></p>
       <div class="nota surge" id="lugarNota"></div>
+      <button class="caixa" id="caixa" aria-label="Abrir o presente">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <g class="brilho" fill="#F9AB00"><circle cx="28" cy="28" r="3.500"/><circle cx="94" cy="24" r="4.500"/><circle cx="60" cy="10" r="3.500"/><circle cx="14" cy="52" r="2.500"/><circle cx="108" cy="50" r="3"/><circle cx="44" cy="6" r="2"/><circle cx="80" cy="4" r="2.500"/></g>
+          <rect x="22" y="54" width="76" height="56" rx="7" fill="var(--cor)"/>
+          <rect x="53" y="54" width="14" height="56" fill="#FBBC04"/>
+          <g class="tampa"><rect x="15" y="38" width="90" height="20" rx="6" fill="var(--cor)"/><rect x="15" y="38" width="90" height="20" rx="6" fill="#000" opacity=".13"/>
+            <rect x="53" y="38" width="14" height="20" fill="#FBBC04"/>
+            <path d="M60 38 C40 8 22 30 60 38 C98 30 80 8 60 38Z" fill="#FBBC04" stroke="#E8A200" stroke-width="1.500" stroke-linejoin="round"/><circle cx="60" cy="37" r="5" fill="#E8A200"/></g>
+        </svg>
+        <span>Toque no presente para abrir</span>
+      </button>
     </div>
     <div class="rodape"><button class="btn largo" id="seguir">Continuar o caminho</button></div>
   </article>
@@ -339,13 +439,21 @@
   </div>
 </section>
 
+<!-- ================= SURPRESA DO DIA: BOLO ================= -->
+<section id="bolo" class="tela">
+  <p class="bolo-tit" id="boloTit"></p>
+  <svg id="boloSvg" viewBox="0 0 300 280"></svg>
+  <p class="bolo-status" id="boloStatus"></p>
+  <div class="bolo-fim"><p>Que o seu pedido se realize.</p><button class="btn claro" id="boloVoltar">Continuar</button></div>
+</section>
+
 <!-- ================= FINAL ================= -->
 <section id="fim" class="tela">
   <p class="f f1">A caminhada de hoje termina aqui.</p>
   <p class="f f2">A nossa amizade, não.</p>
   <div class="f ffoto"><div class="halo"></div><span class="polaroid"><img id="fotoFinal" src="fotos/foto-final.jpg" alt=""><span class="leg" id="legFinal">Thaísa <svg viewBox="0 0 24 24"><path d="M12 21s-8-5.200-8-11a4.500 4.500 0 0 1 8-2.800A4.500 4.500 0 0 1 20 10c0 5.800-8 11-8 11z"/></svg></span></span></div>
   <p class="f f3">Feliz aniversário, Thaísa.</p>
-  <div class="f f4"><button class="btn contorno" id="voltarMapa">Voltar ao mapa</button></div>
+  <div class="f f4"><button class="btn claro" id="verHistoria" style="display:none">Rever a nossa história</button><button class="btn contorno" id="voltarMapa">Voltar ao mapa</button></div>
 </section>
 
 <div id="flash"></div>
@@ -361,7 +469,7 @@
    foto = (opcional) foto que aparece no cartão
    tipo = "texto" ou "final".  Use <br> para quebrar linha.
    ========================================================= */
-const ESTACOES = [
+let ESTACOES = [
   { titulo:"Lá Fora", sub:"o começo", ic:"sol", cor:"#F29900", tipo:"texto",
     txt:"No começo éramos só colegas de trabalho. Até que, depois do almoço, a gente começou a ir lá pra fora conversar. Era pra ser só um intervalo… e virou o melhor horário do meu dia.",
     nota:"Ninguém sabia, mas eu contava as horas pra chegar ali.",
@@ -388,6 +496,31 @@ const ESTACOES = [
   { titulo:"A Despedida", sub:"onde cada um seguia o seu caminho", ic:"bifurca", cor:"#B3293F", tipo:"final" }
 ];
 
+const HISTORIA_EST = ESTACOES;
+
+/* =========================================================
+   EDIÇÃO DE ANIVERSÁRIO — presentes do caminho novo (edite os textos aqui)
+   tipo "presente" = caixa para desembrulhar;  cupom:true = aparece como vale;  tipo "bolo" = a festa
+   ========================================================= */
+const PRESENTES = [
+  { titulo:"Leveza", ic:"presente", cor:"#D01884", tipo:"presente",
+    txt:"Que tudo o que pesou fique no ano que passou. Que este novo ciclo seja mais leve, com menos preocupação e mais noites em que você deita a cabeça no travesseiro em paz.",
+    nota:"Você merece descansar o coração." },
+  { titulo:"Motivos pra rir", ic:"presente", cor:"#129EAF", tipo:"presente",
+    txt:"Que não falte risada. Daquelas de perder o ar, por bobagem, no meio do dia. E que nunca falte alguém pra rir junto com você.",
+    nota:"Se faltar, pode me chamar." },
+  { titulo:"Coragem", ic:"presente", cor:"#E8710A", tipo:"presente",
+    txt:"Pra ir atrás de tudo o que você sonha, sem pedir licença e sem pedir desculpa. Você é muito mais capaz do que imagina.",
+    nota:"Eu aposto em você, sempre." },
+  { titulo:"Gente de verdade", ic:"presente", cor:"#9334E6", tipo:"presente",
+    txt:"Que você viva cercada de gente leal, que te enxerga, te respeita e fica do seu lado nos dias bons e nos difíceis.",
+    nota:"Pode me colocar nessa lista." },
+  { titulo:"Um vale", ic:"presente", cor:"#D93025", tipo:"presente", cupom:true,
+    txt:"Vale um almoço e uma conversa lá fora, como antigamente. Você escolhe o dia.",
+    nota:"Sem prazo de validade." },
+  { titulo:"A Festa", ic:"bolo", cor:"#F29900", tipo:"bolo" }
+];
+
 /* =========================================================
    ÍCONES (mesmo traço em todo o app)
    ========================================================= */
@@ -407,6 +540,9 @@ const ICONES = {
   seta:'<path d="M5 12h14M13 6l6 6-6 6"/>',
   carta:'<rect x="3" y="5" width="18" height="14" rx="2.500"/><path d="M3.500 7.500l8.500 6 8.500-6"/>',
   pin:'<path d="M12 21s-6.500-6-6.500-11a6.500 6.500 0 0 1 13 0c0 5-6.500 11-6.500 11z"/><circle cx="12" cy="10" r="2.300"/>',
+  presente:'<rect x="4" y="9.500" width="16" height="10.500" rx="1.500"/><path d="M3 9.500h18M12 9.500V20"/><path d="M12 9.500C10 5 6.500 6 7.500 8.500c.5 1.200 2.500 1 4.500 1zM12 9.500c2-4.500 5.500-3.500 4.500-1-.5 1.200-2.500 1-4.500 1z"/>',
+  bolo:'<path d="M5 20h14v-6.500a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z"/><path d="M5 16c1.600 1.200 3.100 1.200 4.700 0s3-1.200 4.600 0 3.100 1.200 4.700 0"/><path d="M12 11.500V8M12 5v.01"/>',
+  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/>',
   predio:'<rect x="5" y="3" width="14" height="18" rx="1.500"/><path d="M9 7.500h.01M12 7.500h.01M15 7.500h.01M9 11.500h.01M12 11.500h.01M15 11.500h.01M10.500 21v-4.500h3V21"/>'
 };
 const icone = n => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONES[n]}</svg>`;
@@ -451,9 +587,21 @@ function freio(){ tom(1900,0,.9,.04,"sawtooth"); tom(2100,.1,.8,.03,"sawtooth");
 /* ---------- mapa ---------- */
 const NS="http://www.w3.org/2000/svg";
 // trajeto a pé (segue a avenida): começa na empresa e termina na estação José Cândido
-const ROTA_D="M 78 132 C 112 170, 96 236, 140 282 S 250 330, 236 410 S 190 500, 262 548 S 300 572, 296 590";
-const FRACOES=[.07,.19,.32,.45,.58,.71,.84,1];   // posição de cada parada no trajeto (0 = empresa, 1 = estação)
-const LADO=[1,-1,1,-1,1,-1,1,-1];                // lado da etiqueta: 1 = direita, -1 = esquerda
+let ROTA_D="M 78 132 C 112 170, 96 236, 140 282 S 250 330, 236 410 S 190 500, 262 548 S 300 572, 296 590";
+let FRACOES=[.07,.19,.32,.45,.58,.71,.84,1];   // posição de cada parada no trajeto (0 = empresa, 1 = estação)
+let LADO=[1,-1,1,-1,1,-1,1,-1];                // lado da etiqueta: 1 = direita, -1 = esquerda
+// Dois modos: "historia" (o caminho da empresa até a despedida) e "festa" (a edição de aniversário).
+const MODOS={
+  historia:{ est:HISTORIA_EST, rota:ROTA_D, fr:FRACOES, lado:LADO },
+  festa:{ est:PRESENTES, fr:[.15,.32,.49,.66,.83,1], lado:[],     // sai da casa da mãe e sobe até a festa
+          rota:"M 250 600 C 212 566, 118 566, 108 506 S 196 446, 246 422 S 316 362, 252 322 S 116 302, 128 252 S 236 232, 300 198" }
+};
+let modo="historia";
+// A edição de aniversário só existe a partir do dia 14 (no relógio do celular dela).
+// Para testar antes: abra o link com #aniversario no fim. Para ver como era antes: #antes
+const ANIVERSARIO=new Date(2026,10,14);   // 14 de novembro de 2026 (mês começa em 0)
+const ehAniversario = location.hash==="#antes" ? false : (location.hash==="#aniversario" || Date.now()>=ANIVERSARIO.getTime());
+let boloVisto=false;
 let proxima=0, pinoEm=-1, celebrado=false, despedidos=false, rotaEl=null, rotaL=0, rotaFeita=null, rotaFeitaC=null, PONTOS=[];
 
 function el(tag,attrs,pai){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); if(pai) pai.appendChild(e); return e; }
@@ -536,6 +684,7 @@ function desenharMapa(){
   const em=el("g",{class:"empresa"},svg); el("rect",{x:46,y:104,width:26,height:26,rx:7},em);
   el("g",{transform:"translate(51.200 109.200) scale(.65)"},em).innerHTML=ICONES.predio;
   el("text",{class:"nomeEst",x:42,y:120,"text-anchor":"end",style:"fill:#202124"},svg).textContent="Empresa";
+  if(modo==="festa"){ $("#ramoEle").style.display=$("#ramoEla").style.display="none"; enfeitar(svg); }
   // rota: planejada (pontilhada) + percorrida (azul)
   rotaEl=el("path",{class:"rotaPlano",d:ROTA_D},svg); rotaL=rotaEl.getTotalLength();
   rotaFeitaC=el("path",{class:"rotaC",d:ROTA_D},svg); rotaFeita=el("path",{class:"rotaA",d:ROTA_D},svg);
@@ -546,7 +695,8 @@ function desenharMapa(){
   const pg=el("g",{id:"pinoG"},svg);
   el("ellipse",{class:"sombraB",cx:0,cy:.5,rx:8,ry:2.2},pg);
   const dir=el("g",{id:"dirB"},pg);
-  boneco(dir,"#1a73e8",false,-3.6); boneco(dir,"#b3293f",true,3.6);
+  if(modo==="festa") boneco(dir,"#b3293f",true,0);                       // na festa, o caminho é só dela
+  else { boneco(dir,"#1a73e8",false,-3.6); boneco(dir,"#b3293f",true,3.6); }
   // depois da despedida, cada bonequinho aparece no seu destino
   const eM=el("g",{id:"eleM",transform:"translate(345 556) scale(1.45)",style:"display:none"},svg); el("ellipse",{class:"sombraB",cx:0,cy:.5,rx:4.5,ry:1.8},eM); boneco(eM,"#1a73e8",false,0);
   const aM=el("g",{id:"elaM",transform:"translate(252 612) scale(1.45)",style:"display:none"},svg); el("ellipse",{class:"sombraB",cx:0,cy:.5,rx:4.5,ry:1.8},aM); boneco(aM,"#b3293f",true,0);
@@ -555,7 +705,7 @@ function desenharMapa(){
     const p=PONTOS[i];
     const chip=el("g",{class:"chip",id:"rot"+i},svg);
     el("rect",{rx:8,height:16},chip); el("text",{class:"n"},chip); el("text",{class:"t"},chip);
-    chip._p=p; chip._lado=LADO[i];
+    chip._p=p; chip._lado=LADO[i] || (p.x<180 ? 1 : -1);
     const g=el("g",{class:"pin",id:"md"+i,transform:`translate(${p.x} ${p.y})`},svg);
     el("circle",{class:"ring",cx:0,cy:-21,r:11,stroke:e.cor},g);
     el("path",{class:"gota",d:"M0 0 C-3 -6 -11 -11 -11 -21 A11 11 0 1 1 11 -21 C11 -11 3 -6 0 0Z"},g);
@@ -564,6 +714,30 @@ function desenharMapa(){
     g.addEventListener("click",()=>chegar(i));
   });
   posicionarBonecos(fracDe(pinoEm));
+}
+// enfeites da edição de aniversário: bandeirinhas e balões
+function enfeitar(svg){
+  const cs=["#D01884","#129EAF","#F29900","#9334E6","#1a73e8","#D93025"];
+  const varal=d=>{ const pa=el("path",{d,fill:"none",stroke:"#8a8f95","stroke-width":1},svg), L=pa.getTotalLength();
+    for(let s=8,k=0;s<L-4;s+=13,k++){ const p=pa.getPointAtLength(s); el("path",{d:`M${p.x-4.500} ${p.y} l9 0 l-4.500 9z`,fill:cs[k%cs.length],stroke:"#fff","stroke-width":.5},svg); } };
+  varal("M -10 132 Q 60 160 130 136 T 262 134");
+  varal("M 150 474 Q 230 502 300 470 T 380 472");
+  varal("M -10 356 Q 50 384 112 358");
+  const balao=(x,y,c,dl)=>{ const g=el("g",{class:"balao",style:`animation-delay:${dl}s`},svg);
+    el("path",{d:`M${x} ${y+10} q-4 8 0 14 q4 6 0 12`,fill:"none",stroke:"#8a8f95","stroke-width":.8},g);
+    el("ellipse",{cx:x,cy:y,rx:7.500,ry:9.500,fill:c},g); el("path",{d:`M${x-2} ${y+9} l4 0 l-2 3z`,fill:c},g);
+    el("ellipse",{cx:x-2.500,cy:y-3.500,rx:2,ry:3,fill:"#fff",opacity:.45},g); };
+  [[328,150,0],[342,168,2],[330,190,1],[38,300,3],[334,432,4],[58,172,1],[206,574,0],[192,588,3],[330,300,5]].forEach(([x,y,k],j)=>balao(x,y,cs[k],-(j*.37)));
+}
+// troca entre a história e a edição de aniversário
+function usarModo(m){
+  modo=m; const M=MODOS[m]; ESTACOES=M.est; ROTA_D=M.rota; FRACOES=M.fr; LADO=M.lado;
+  proxima=0; pinoEm=-1; celebrado=false; despedidos=false; ultimoX=null; lugarIdx=-1;
+  $("#gpsLin").innerHTML = m==="festa" ? "<b>Casa da sua mãe</b><br>A Festa" : "<b>Empresa</b><br>Perto da Estação José Cândido";
+  $("#metaPe").innerHTML = m==="festa" ? icone("bolo")+" seu dia<span>Edição 14.11</span>" : icone("andar")+" a pé<span>Linha Thaísa</span>";
+  const svg=$("#mapaSvg"); svg.classList.remove("zoom","completo"); svg.style.transform="";
+  $("#sheet").classList.remove("festa","ultima","presente"); $("#mapa").classList.remove("aberto");
+  desenharMapa(); atualizarMapa();
 }
 function marcarRota(f){ for(const q of [rotaFeitaC,rotaFeita]) q.style.strokeDashoffset=rotaL*(1-f); }
 let ultimoX=null;
@@ -578,9 +752,10 @@ function atualizarMapa(){
   ESTACOES.forEach((e,i)=>{
     const g=$("#md"+i), chip=$("#rot"+i); if(!g) return;
     const estado = i<proxima?"feita":(i===proxima?"livre":"trancada");
-    g.setAttribute("class","pin "+estado); chip.setAttribute("class","chip "+estado);
-    g.querySelector(".gota").style.fill = estado==="trancada" ? "" : e.cor;
-    const nome = estado==="trancada" ? "???" : e.titulo;
+    const destino = e.tipo==="bolo" && estado==="trancada";            // a festa aparece no mapa desde o começo
+    g.setAttribute("class","pin "+(destino?"destino":estado)); chip.setAttribute("class","chip "+(destino?"destino":estado));
+    g.querySelector(".gota").style.fill = (estado==="trancada" && !destino) ? "" : e.cor;
+    const nome = (estado==="trancada" && !destino) ? "???" : e.titulo;
     const tn=chip.querySelector(".n"), tt=chip.querySelector(".t"), rc=chip.querySelector("rect");
     tn.textContent=(i+1); tt.textContent=nome;
     const wn=tn.getComputedTextLength()+5, wt=tt.getComputedTextLength(), w=wn+wt+16;
@@ -588,17 +763,26 @@ function atualizarMapa(){
     rc.setAttribute("x",x0); rc.setAttribute("y",y0); rc.setAttribute("width",w);
     tn.setAttribute("x",x0+8); tn.setAttribute("y",y0+8.5); tt.setAttribute("x",x0+8+wn); tt.setAttribute("y",y0+8.5);
   });
-  // depois da despedida: cada um no seu destino
-  $("#mapaSvg").classList.toggle("separados",despedidos);
-  $("#pinoG").style.display=despedidos?"none":""; $("#eleM").style.display=$("#elaM").style.display=despedidos?"":"none";
-  const n=ESTACOES.length, btn=$("#sheetBtn"), sh=$("#sheet");
+  // depois da despedida (só na história): cada um no seu destino
+  const sep=despedidos && modo==="historia";
+  $("#mapaSvg").classList.toggle("separados",sep);
+  $("#pinoG").style.display=sep?"none":""; $("#eleM").style.display=$("#elaM").style.display=sep?"":"none";
+  const n=ESTACOES.length, btn=$("#sheetBtn"), sh=$("#sheet"), festa=modo==="festa";
+  sh.classList.toggle("presente",festa && proxima<n);
   if(proxima<n){
     sh.classList.remove("festa");
-    $("#sheetSub").textContent = proxima===n-1 ? "Falta só a última parada" : "Próxima parada · capítulo "+(proxima+1);
-    $("#sheetTit").textContent = ESTACOES[proxima].titulo;
+    const ult=proxima===n-1;
+    if(festa){
+      $("#sheetSub").textContent = ult ? "Última parada" : "Presente "+(proxima+1)+" de "+(n-1);
+      $("#sheetTit").textContent = ult ? "A Festa" : "Tem um presente te esperando";
+      btn.innerHTML = icone(ult?"bolo":"andar")+(proxima===0 ? "Começar" : (ult ? "Ir para a festa" : "Caminhar"));
+    } else {
+      $("#sheetSub").textContent = ult ? "Falta só a última parada" : "Próxima parada · capítulo "+(proxima+1);
+      $("#sheetTit").textContent = ESTACOES[proxima].titulo;
+      btn.innerHTML = icone("andar")+(proxima===0 ? "Começar" : (ult ? "Ir até lá" : "Caminhar"));
+    }
     btn.style.display=""; btn.disabled=false;
-    btn.innerHTML = icone("andar")+(proxima===0 ? "Começar" : (proxima===n-1 ? "Ir até lá" : "Caminhar"));
-    sh.classList.toggle("ultima",proxima===n-1);
+    sh.classList.toggle("ultima",ult && !festa);
   } else if(!sh.classList.contains("festa")){
     $("#sheetSub").textContent="Você chegou"; $("#sheetTit").textContent="Toque nos pinos para rever"; btn.style.display="none";
   }
@@ -635,7 +819,8 @@ async function chegar(i){
   if(i>proxima || ocupado) return; ocupado=true;
   try{
     if(pinoEm!==i){ clack(); await andarAte(i); await espera(250); }
-    if(ESTACOES[i].tipo==="texto") abrirLugar(i); else await abrirFinal(i);
+    const t=ESTACOES[i].tipo;
+    if(t==="texto" || t==="presente") abrirLugar(i); else if(t==="bolo") abrirBolo(i); else await abrirFinal(i);
   } finally { ocupado=false; }
 }
 function concluir(i){ if(i===proxima){ proxima++; } atualizarMapa(); setTimeout(enquadrar,80); }
@@ -646,7 +831,9 @@ async function celebrarMapa(){
   const svg=$("#mapaSvg"), sh=$("#sheet");
   svg.style.transform=""; svg.classList.remove("zoom","completo"); void svg.getBoundingClientRect(); svg.classList.add("zoom");
   await espera(900); svg.classList.add("completo"); chime();
-  sh.classList.add("festa"); $("#sheetSub").textContent="Você chegou ao destino"; $("#sheetTit").textContent=ESTACOES.length+" capítulos. Um caminho só nosso."; $("#sheetBtn").style.display="none";
+  sh.classList.add("festa"); $("#sheetBtn").style.display="none";
+  $("#sheetSub").textContent = modo==="festa" ? "Você chegou à festa" : "Você chegou ao destino";
+  $("#sheetTit").textContent = modo==="festa" ? "Feliz aniversário, Thaísa!" : ESTACOES.length+" capítulos. Um caminho só nosso.";
   setTimeout(enquadrar,2800);   // depois do zoom, mostra os dois destinos
 }
 
@@ -657,7 +844,11 @@ function abrirLugar(i){
   lg.style.setProperty("--cor",e.cor);
   lg.classList.toggle("com-foto",!!e.foto);
   $("#lugarSelo").innerHTML = e.foto ? `<img src="${e.foto}" alt="">` : icone(e.ic);
-  $("#lugarCap").textContent="Capítulo "+(i+1)+" · "+e.sub;
+  const pres=e.tipo==="presente";
+  lg.classList.remove("abrindo","revelado");
+  lg.classList.toggle("fechado",pres && i===proxima);                 // presente ainda embrulhado (ao rever, já aparece aberto)
+  lg.classList.toggle("cupom",!!e.cupom);
+  $("#lugarCap").textContent = pres ? "Presente "+(i+1)+" de "+(ESTACOES.length-1) : "Capítulo "+(i+1)+" · "+e.sub;
   $("#lugarTit").textContent=e.titulo;
   $("#lugarTxt").innerHTML=e.txt;
   $("#lugarNota").innerHTML=e.nota||"";
@@ -673,6 +864,12 @@ function focarPino(i){
   const dx=alvoX-(pin.left+pin.width/2), dy=alvoY-pin.bottom;
   void svg.getBoundingClientRect(); svg.style.transition=""; svg.style.transform=`translate(${dx}px,${dy}px)`;
 }
+// desembrulhar o presente
+$("#caixa").onclick=async()=>{
+  const lg=$("#lugar"); if(!lg.classList.contains("fechado") || lg.classList.contains("abrindo")) return;
+  lg.classList.add("abrindo"); tom(988,0,.2,.1); tom(1319,.1,.25,.1); tom(1568,.2,.5,.1);
+  await espera(800); lg.classList.remove("fechado","abrindo"); lg.classList.add("revelado");
+};
 $("#seguir").onclick=()=>{
   $("#mapa").classList.remove("aberto"); $("#mapaSvg").style.transform="";
   const i=lugarIdx; lugarIdx=-1; if(i>=0) concluir(i);
@@ -779,9 +976,19 @@ $("#cartaSegue").onclick=async()=>{
   mostra("#carta",false);
   await seSeparar();
   despedidos=true;
-  mostra("#fim",true); chime();
+  await sequenciaFim();
+};
+// tela final (serve para a história e para a edição de aniversário)
+async function sequenciaFim(){
+  const festa=modo==="festa";
+  $("#fim .f1").textContent = festa ? "Um novo ano começa hoje." : "A caminhada de hoje termina aqui.";
+  $("#fim .f2").textContent = festa ? "E eu sigo aqui, torcendo por você." : "A nossa amizade, não.";
+  $("#fotoFinal").src = festa ? "fotos/foto-sorriso.jpg" : "fotos/foto-final.jpg";
+  $("#verHistoria").style.display = festa ? "" : "none";
+  document.querySelectorAll("#fim .f").forEach(e=>e.classList.remove("v"));
   $("#fotoFinal").classList.remove("revela"); $("#legFinal").classList.remove("v");
-  await espera(700); mostra("#final",false);
+  mostra("#fim",true); chime();
+  await espera(700); mostra("#final",false); mostra("#bolo",false);
   await espera(600); $("#fim .f1").classList.add("v");
   await espera(2000); $("#fim .f2").classList.add("v");
   await espera(2200);
@@ -793,7 +1000,7 @@ $("#cartaSegue").onclick=async()=>{
   await espera(2600); $("#legFinal").classList.add("v");
   await espera(1400); $("#fim .f3").classList.add("v");
   await espera(1600); $("#fim .f4").classList.add("v");
-};
+}
 $("#voltarMapa").onclick=()=>{ document.querySelectorAll("#fim .f").forEach(e=>e.classList.remove("v")); mostra("#fim",false); atualizarMapa(); setTimeout(celebrarMapa,600); };
 
 /* ---------- confete ---------- */
@@ -806,12 +1013,126 @@ function confete(){
     if(++t<320) requestAnimationFrame(f); else x.clearRect(0,0,c.width,c.height); })();
 }
 
+/* ---------- surpresa do dia: bolo com velas para soprar ---------- */
+let micStream=null;
+function montarBolo(){
+  const s=$("#boloSvg"); s.innerHTML=""; s.style.setProperty("--sopro",0);
+  const defs=el("defs",{},s);
+  defs.innerHTML='<radialGradient id="gBrilho"><stop offset="0" stop-color="#ffd98a" stop-opacity=".55"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>';
+  el("ellipse",{id:"boloBrilho",cx:150,cy:66,rx:150,ry:78,fill:"url(#gBrilho)"},s);
+  el("ellipse",{cx:150,cy:262,rx:120,ry:9,fill:"rgba(0,0,0,.35)"},s);
+  el("ellipse",{cx:150,cy:256,rx:130,ry:13,fill:"#f4efe9"},s);
+  // andar de baixo
+  el("rect",{x:46,y:176,width:208,height:78,rx:12,fill:"#f7dcc4"},s);
+  el("path",{d:"M46 190 q0 -14 12 -14 h184 q12 0 12 14 v10"+" q-13 16 -26 0 q-13 18 -26 0 q-13 14 -26 0 q-13 18 -26 0".repeat(2)+"z",fill:"#b3293f"},s);
+  for(let k=0;k<8;k++) el("circle",{cx:62+k*25,cy:236,r:3.200,fill:k%2?"#fff":"#F9AB00"},s);
+  // andar de cima
+  el("rect",{x:84,y:112,width:132,height:66,rx:11,fill:"#fbe9d7"},s);
+  el("path",{d:"M84 126 q0 -14 12 -14 h108 q12 0 12 14 v8"+" q-11 14 -22 0 q-11 16 -22 0".repeat(3)+"z",fill:"#fff"},s);
+  const cs=["#ff73b0","#74a3ff","#F9AB00","#58c99a","#b99cff"];
+  for(let k=0;k<14;k++) el("rect",{x:92+((k*37)%116),y:150+((k*13)%20),width:7,height:2.600,rx:1.300,fill:cs[k%5],transform:`rotate(${(k*47)%180} ${95+((k*37)%116)} ${151+((k*13)%20)})`},s);
+  // velas
+  [104,127,150,173,196].forEach((x,k)=>{
+    const v=el("g",{class:"vela",transform:`translate(${x} 113)`},s);
+    el("rect",{x:-14,y:-70,width:28,height:74,fill:"transparent"},v);                      // área de toque maior
+    el("rect",{x:-4.500,y:-36,width:9,height:37,rx:2.500,fill:cs[k]},v);
+    for(const yy of [-29,-20,-11]) el("path",{d:`M-4.500 ${yy} l9 -5`,stroke:"#fff","stroke-width":2,opacity:.7},v);
+    el("path",{d:"M0 -36 v-5",stroke:"#3c2a20","stroke-width":1.600,"stroke-linecap":"round"},v);
+    el("circle",{class:"halo",cx:0,cy:-52,r:15,fill:"rgba(255,214,130,.35)"},v);
+    const c=el("g",{class:"chama"},v);
+    el("path",{d:"M0 -40 C-7.500 -47 -5 -57 0 -65 C5 -57 7.500 -47 0 -40Z",fill:"#ffb02e"},c);
+    el("path",{d:"M0 -42 C-3.500 -46 -2.500 -51 0 -55 C2.500 -51 3.500 -46 0 -42Z",fill:"#fff3c4"},c);
+    el("path",{class:"fumaca",d:"M0 -42 q-5 -7 0 -13 q5 -6 0 -13"},v);
+    v.addEventListener("click",()=>apagarVela(v));
+  });
+}
+function sopro(){ try{ if(!somOk())return; const n=Math.floor(ctx.sampleRate*.18),b=ctx.createBuffer(1,n,ctx.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2); const s=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain(); f.type="lowpass"; f.frequency.value=900; g.gain.value=.25;
+  s.buffer=b; s.connect(f).connect(g).connect(ctx.destination); s.start(); }catch(e){} }
+function parabens(){   // "Parabéns pra você"
+  const n=[[392,.36],[392,.18],[440,.54],[392,.54],[523,.54],[494,1],[392,.36],[392,.18],[440,.54],[392,.54],[587,.54],[523,1.100]];
+  let t=0; for(const [f,d] of n){ tom(f,t,d+.25,.13,"triangle"); t+=d; }
+}
+function apagarVela(v){
+  if(v.classList.contains("apagada")) return;
+  v.classList.add("apagada"); sopro();
+  const restam=document.querySelectorAll("#boloSvg .vela:not(.apagada)").length;
+  $("#boloBrilho").style.opacity=restam/5;
+  if(restam===0) fimBolo();
+}
+function apagarUma(){ const v=document.querySelector("#boloSvg .vela:not(.apagada)"); if(v) apagarVela(v); }
+function pararMic(){ if(micStream){ micStream.getTracks().forEach(t=>t.stop()); micStream=null; } }
+async function iniciarMic(){
+  const st=$("#boloStatus"), cena=$("#boloSvg");
+  const semMic=()=>{ st.innerHTML="Toque nas velas para apagar"; };
+  try{
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !somOk()) return semMic();
+    st.innerHTML=icone("mic")+"Permita o microfone para soprar as velas";
+    // sem redução de ruído: ela trataria o sopro como ruído e apagaria o som
+    micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    if(!$("#bolo").classList.contains("on")) return pararMic();
+    const an=ctx.createAnalyser(); an.fftSize=1024; ctx.createMediaStreamSource(micStream).connect(an);
+    const buf=new Uint8Array(an.fftSize); let soma=0, amostras=0, base=0, forte=0, ultimo=0;
+    st.innerHTML=icone("mic")+"Sopre perto do microfone do celular<br>(ou toque nas velas)";
+    (function ouvir(t){
+      if(!micStream) return;
+      an.getByteTimeDomainData(buf); let s=0; for(let i=0;i<buf.length;i++){ const x=(buf[i]-128)/128; s+=x*x; }
+      const rms=Math.sqrt(s/buf.length);
+      if(amostras<30){ soma+=rms; amostras++; base=soma/amostras; }                        // meio segundo medindo o ruído do ambiente
+      else { const lim=Math.max(.085,base*3.500);
+        cena.style.setProperty("--sopro",Math.min(1,Math.max(0,(rms-lim*.4)/(lim*1.400))).toFixed(2));   // as chamas deitam com o sopro
+        if(rms>lim){ forte++; if(forte>5 && t-ultimo>280){ apagarUma(); ultimo=t; } } else forte=Math.max(0,forte-1); }
+      requestAnimationFrame(ouvir);
+    })(performance.now());
+  }catch(e){ pararMic(); semMic(); }
+}
+let boloIdx=-1;
+function abrirBolo(i){
+  if($("#bolo").classList.contains("on")) return; boloIdx=i;
+  montarBolo(); $("#bolo").classList.remove("apagado");
+  const tit=$("#boloTit"); tit.style.opacity=1; tit.innerHTML="Faça um pedido<br>e sopre as velas";
+  $("#boloStatus").innerHTML="";
+  mostra("#bolo",true); toque(); iniciarMic();
+}
+async function fimBolo(){
+  pararMic(); boloVisto=true; $("#boloSvg").style.setProperty("--sopro",0); concluir(boloIdx);
+  const tit=$("#boloTit");
+  await espera(700); tit.style.opacity=0;
+  await espera(700); tit.innerHTML="Feliz aniversário,<br>Thaísa!"; tit.style.opacity=1;
+  $("#bolo").classList.add("apagado"); parabens(); confete();
+}
+$("#boloVoltar").onclick=()=>{ pararMic(); sequenciaFim(); };
+
+/* ---------- edição de aniversário: "atualização" e troca de modo ---------- */
+$("#atualizar").onclick=async()=>{
+  somOk(); toque(); $("#atualiza").classList.add("instalando");
+  const msgs=["Embrulhando os presentes…","Enchendo os balões…","Acendendo as velas…","Pronto!"];
+  await espera(60);
+  for(let k=0;k<msgs.length;k++){ $("#upMsg").textContent=msgs[k]; $("#upBarra").style.width=((k+1)/msgs.length*100)+"%"; if(k<3) clack(); await espera(k===3?800:1150); }
+  usarModo("festa"); chime(); confete();
+  mostra("#atualiza",false); mostra("#mapa",true); setTimeout(()=>{ atualizarMapa(); enquadrar(); },80);
+};
+// volta para o caminho antigo (a história dos dois), do começo
+function verHistoria(){
+  usarModo("historia");
+  ["#atualiza","#fim","#bolo","#final","#carta","#mapa"].forEach(s=>mostra(s,false));
+  document.querySelectorAll("#fim .f").forEach(e=>e.classList.remove("v"));
+  mostra("#entrada",true);
+}
+$("#pularHistoria").onclick=verHistoria; $("#verHistoria").onclick=verHistoria;
+function abrirAtualizacao(){
+  $("#atualiza").classList.remove("instalando"); $("#upBarra").style.width="0"; $("#upMsg").textContent="";
+  mostra("#entrada",false); mostra("#atualiza",true);
+}
+
 /* ---------- início ---------- */
 desenharMapa(); atualizarMapa();
 if(document.fonts) document.fonts.ready.then(()=>atualizarMapa());
 // a abertura mostra um pedaço do mesmo mapa (cópia sem ids, só ilustração)
 $("#heroiSvg").innerHTML=$("#mapaSvg").innerHTML.replace(/ id="[^"]*"/g,"").replace(/<text class="nomeAv".*?<\/text>/,"");
 $("#embarcar").onclick=()=>{ chime(); mostra("#entrada",false); mostra("#mapa",true); setTimeout(()=>{ atualizarMapa(); enquadrar(); },60); };
+// no dia do aniversário, o app abre na "atualização" da edição de aniversário
+if(ehAniversario){ $("#rever").style.display=""; $("#rever").onclick=abrirAtualizacao; abrirAtualizacao(); }
 </script>
 </body>
 </html>
