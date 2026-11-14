@@ -1132,7 +1132,12 @@ if(document.fonts) document.fonts.ready.then(()=>atualizarMapa());
 $("#heroiSvg").innerHTML=$("#mapaSvg").innerHTML.replace(/ id="[^"]*"/g,"").replace(/<text class="nomeAv".*?<\/text>/,"");
 $("#embarcar").onclick=()=>{ chime(); mostra("#entrada",false); mostra("#mapa",true); setTimeout(()=>{ atualizarMapa(); enquadrar(); },60); };
 // no dia do aniversário, o app abre na "atualização" da edição de aniversário
-if(ehAniversario){ $("#rever").style.display=""; $("#rever").onclick=abrirAtualizacao; abrirAtualizacao(); }
+$("#rever").onclick=abrirAtualizacao;
+if(ehAniversario){ $("#rever").style.display=""; abrirAtualizacao(); }
+// atalho secreto para testar antes do dia: tocar 5 vezes seguidas no selo "Especial de aniversário" da abertura
+let toquesSelo=0, tSelo=0;
+$(".selo").addEventListener("click",()=>{ const t=Date.now(); toquesSelo = t-tSelo<1500 ? toquesSelo+1 : 1; tSelo=t;
+  if(toquesSelo>=5){ toquesSelo=0; $("#rever").style.display=""; abrirAtualizacao(); } });
 </script>
 </body>
 </html>
